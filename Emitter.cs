@@ -9,39 +9,44 @@ namespace ParticleSystem
     public class Emitter
     {
         private Random _rnd;
-        private double _particleMinSpeed = -2;
-        private double _particleMaxSpeed = 2;
-        private bool _active = false;
-
+        
         public Emitter()
         {
             Particles = new List<Particle>();
             _rnd = new Random();
         }
 
-        public int EmissionRate { get; set; } = 5; // How many particles are emitted per frame update (1/60s)
+        public int EmissionRate { get; set; } = 50; // How many particles are emitted per frame update (1/60s)
         public List<Particle> Particles { get; }
         public Vector2 Location { get; set; }
         public int Lifetime { get; set; } = 1;
+        public int StartDelay { get; set; } = 150;
+        public double ParticleMinSpeed { get; set; } = -2;
+        public double ParticleMaxSpeed { get; set; } = 2;
         public int Age { get; set; }
         public bool Loop { get; set; } = true;
+        public bool Active { get; set; } = false;
 
         public void Trigger()
         {
-            Age = 0;
-            _active = true;
+            ResetToStart();
+            Active = true;
         }
 
         public void Stop()
         {
-            _active = false;
+            Active = false;
         }
 
         public void Update()
         {
-            if(Age == Lifetime && !Loop)
+            if(Age == Lifetime)
             {
-                _active = false;
+                if (!Loop)
+                    Active = false;
+
+                else
+                    ResetToStart();
             }
 
             else
@@ -49,12 +54,17 @@ namespace ParticleSystem
                 Age++;
             }
 
-            if (_active)
+            if (Age > 0 && Active)
             {
                 EmitParticles();
             }
 
             UpdateParticles();
+        }
+
+        public void ResetToStart()
+        {
+            Age = 0 - StartDelay;
         }
 
         public void EmitParticles()
@@ -113,7 +123,7 @@ namespace ParticleSystem
 
         public float GetRandomVelocity()
         {
-            return (float)(_rnd.NextDouble() * (_particleMaxSpeed - _particleMinSpeed) + _particleMinSpeed);
+            return (float)(_rnd.NextDouble() * (ParticleMaxSpeed - ParticleMinSpeed) + ParticleMinSpeed);
         }
     }
 }
