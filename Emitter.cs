@@ -11,21 +11,50 @@ namespace ParticleSystem
         private Random _rnd;
         private double _particleMinSpeed = -2;
         private double _particleMaxSpeed = 2;
-       
+        private bool _active = false;
+
         public Emitter()
         {
             Particles = new List<Particle>();
             _rnd = new Random();
         }
 
-        public int EmissionRate { get; set; } = 1; // How many particles are emitted per frame update (1/60s)
+        public int EmissionRate { get; set; } = 5; // How many particles are emitted per frame update (1/60s)
         public List<Particle> Particles { get; }
         public Vector2 Location { get; set; }
+        public int Lifetime { get; set; } = 1;
+        public int Age { get; set; }
+        public bool Loop { get; set; } = true;
+
+        public void Trigger()
+        {
+            Age = 0;
+            _active = true;
+        }
+
+        public void Stop()
+        {
+            _active = false;
+        }
 
         public void Update()
         {
-            EmitParticles();
-            UpdateParticles();            
+            if(Age == Lifetime && !Loop)
+            {
+                _active = false;
+            }
+
+            else
+            {
+                Age++;
+            }
+
+            if (_active)
+            {
+                EmitParticles();
+            }
+
+            UpdateParticles();
         }
 
         public void EmitParticles()

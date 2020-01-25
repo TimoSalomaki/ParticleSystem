@@ -3,7 +3,7 @@
 namespace ParticleSystem
 {
     public class Particle
-    {        
+    {
         public float Opacity { get; set; } = 1f;
         public float Size { get; set; } = 10f;
         public int MaximumLife { get; set; } = 120;
