@@ -20,7 +20,7 @@ namespace ParticleSystem
         public List<Particle> Particles { get; }
         public Vector2 Location { get; set; }
         public int Lifetime { get; set; } = 1;
-        public int StartDelay { get; set; } = 150;
+        public int StartDelay { get; set; } = 30;
         public double ParticleMinSpeed { get; set; } = -2;
         public double ParticleMaxSpeed { get; set; } = 2;
         public int Age { get; set; }

@@ -44,6 +44,8 @@ namespace ParticleSystem
             if (Keyboard.GetState().IsKeyDown(Keys.S))
                 _emitter.Stop();
 
+            _emitter.Location = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
+
             _emitter.Update();
 
             base.Update(gameTime);
