@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -23,14 +24,23 @@ namespace ParticleSystem
 
         public void Update()
         {
-            // Emit new particles
-            for(int i = 0; i < EmissionRate; i++)
+            EmitParticles();
+
+            UpdateParticles();
+            
+        }
+
+        public void EmitParticles()
+        {
+            for (int i = 0; i < EmissionRate; i++)
             {
                 Particles.Add(CreateNewParticle());
             }
+        }
 
-            // Update particles
-            foreach(var particle in Particles)
+        public void UpdateParticles()
+        {
+            foreach (var particle in Particles.ToList())
             {
                 // If the particle is alive, update it
                 if (particle.Age < particle.MaximumLife)
@@ -57,6 +67,7 @@ namespace ParticleSystem
         public void UpdateParticle(Particle particle)
         {
             particle.Position += particle.Velocity;
+            particle.Age++;
         }
 
         public void RenderParticle(Particle particle, SpriteBatch spriteBatch, Texture2D texture)
