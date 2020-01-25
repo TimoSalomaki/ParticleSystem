@@ -18,16 +18,14 @@ namespace ParticleSystem
             _rnd = new Random();
         }
 
-        public int EmissionRate { get; set; } = 1;
+        public int EmissionRate { get; set; } = 1; // How many particles are emitted per frame update (1/60s)
         public List<Particle> Particles { get; }
         public Vector2 Location { get; set; }
 
         public void Update()
         {
             EmitParticles();
-
-            UpdateParticles();
-            
+            UpdateParticles();            
         }
 
         public void EmitParticles()
