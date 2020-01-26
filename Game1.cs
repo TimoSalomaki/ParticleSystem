@@ -7,7 +7,6 @@ namespace ParticleSystem
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private Texture2D _particle;
         private SpriteBatch _spriteBatch;
         private Emitter _emitter;
 
@@ -21,7 +20,8 @@ namespace ParticleSystem
         protected override void Initialize()
         {
             _emitter = new Emitter();
-            _emitter.Location = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height / 2);
+            _emitter.Location = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2,
+                _graphics.GraphicsDevice.Viewport.Height / 2);
 
             base.Initialize();
         }
@@ -30,21 +30,26 @@ namespace ParticleSystem
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _particle = Content.Load<Texture2D>("ParticleSolid");
+            _emitter.Texture = Content.Load<Texture2D>("ParticleSolid");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if(Keyboard.GetState().IsKeyDown(Keys.Space))
+            /*if(Keyboard.GetState().IsKeyDown(Keys.Space))
                 _emitter.Trigger();
 
             if (Keyboard.GetState().IsKeyDown(Keys.S))
-                _emitter.Stop();
+                _emitter.Stop();*/
 
-            _emitter.Location = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
+            _emitter.Location = new Vector2(Mouse.GetState().Position.X,
+                Mouse.GetState().Position.Y);
+
+            if(Mouse.GetState().LeftButton == ButtonState.Pressed)
+                _emitter.Trigger();
 
             _emitter.Update();
 
@@ -53,10 +58,10 @@ namespace ParticleSystem
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
             _spriteBatch.Begin();
-            _emitter.Render(_spriteBatch, _particle);
+            _emitter.Render(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
