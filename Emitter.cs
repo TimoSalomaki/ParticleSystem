@@ -26,6 +26,10 @@ namespace ParticleSystem
         public int Age { get; set; }
         public bool Loop { get; set; } = true;
         public bool Active { get; set; } = false;
+        public Color StartColor { get; set; } = Color.White;
+        public Color EndColor { get; set; } = Color.Red;
+        public float StartSize { get; set; } = 
+        public float EndSize { get; set; }
 
         public void Trigger()
         {
@@ -103,6 +107,7 @@ namespace ParticleSystem
 
         public void UpdateParticle(Particle particle)
         {
+            particle.PreviousPosition = particle.Position;
             particle.Position += particle.Velocity;
             particle.Age++;
         }
