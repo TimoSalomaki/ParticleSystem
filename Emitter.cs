@@ -28,8 +28,8 @@ namespace ParticleSystem
         public bool Active { get; set; } = false;
         public Color StartColor { get; set; } = Color.White;
         public Color EndColor { get; set; } = Color.Red;
-        public float StartSize { get; set; } = 
-        public float EndSize { get; set; }
+        public float StartScale { get; set; } = 3;
+        public float EndScale { get; set; } = 0;
 
         public void Trigger()
         {
@@ -107,14 +107,17 @@ namespace ParticleSystem
 
         public void UpdateParticle(Particle particle)
         {
+            particle.Age++;
+            var particlePercent = (float)particle.Age / particle.MaximumLife;
             particle.PreviousPosition = particle.Position;
             particle.Position += particle.Velocity;
-            particle.Age++;
+            particle.Color = Color.Lerp(StartColor, EndColor, particlePercent);
+            particle.Scale = Math.Abs(EndScale - ((EndScale - StartScale) * (1-particlePercent)));
         }
 
         public void RenderParticle(Particle particle, SpriteBatch spriteBatch, Texture2D texture)
         {
-            spriteBatch.Draw(texture, particle.Position, particle.Color);
+            spriteBatch.Draw(texture, particle.Position, texture.Bounds, particle.Color, 0, Vector2.Zero, particle.Scale, SpriteEffects.None, 0);
         }
 
         public Particle CreateNewParticle()

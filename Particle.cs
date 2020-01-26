@@ -5,7 +5,7 @@ namespace ParticleSystem
     public class Particle
     {
         public float Opacity { get; set; } = 1f;
-        public float Size { get; set; } = 10f;
+        public float Scale { get; set; } = 10f;
         public int MaximumLife { get; set; } = 120;
         public int Age { get; set; }
         public Color Color { get; set; } = Color.White;        
