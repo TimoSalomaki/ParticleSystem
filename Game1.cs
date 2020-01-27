@@ -60,8 +60,8 @@ namespace ParticleSystem
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
-            _spriteBatch.Begin();
+            GraphicsDevice.Clear(Color.Black);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
             _emitter.Render(_spriteBatch);
             _spriteBatch.End();
 
