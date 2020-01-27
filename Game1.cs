@@ -35,21 +35,23 @@ namespace ParticleSystem
 
         protected override void Update(GameTime gameTime)
         {
+            KeyboardHelper.UpdateState();
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            /*if(Keyboard.GetState().IsKeyDown(Keys.Space))
+            if(KeyboardHelper.IsPressed(Keys.Space))
                 _emitter.Trigger();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-                _emitter.Stop();*/
+            if (KeyboardHelper.IsPressed(Keys.S))
+                _emitter.Stop();
 
-            _emitter.Location = new Vector2(Mouse.GetState().Position.X,
+            /*_emitter.Location = new Vector2(Mouse.GetState().Position.X,
                 Mouse.GetState().Position.Y);
 
             if(Mouse.GetState().LeftButton == ButtonState.Pressed)
-                _emitter.Trigger();
+                _emitter.Trigger();*/
 
             _emitter.Update();
 
@@ -59,7 +61,6 @@ namespace ParticleSystem
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
-
             _spriteBatch.Begin();
             _emitter.Render(_spriteBatch);
             _spriteBatch.End();

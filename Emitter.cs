@@ -17,16 +17,17 @@ namespace ParticleSystem
         }
 
         // How many particles are emitted per frame update (1/60s)
-        public int EmissionRate { get; set; } = 30;
+        public int EmissionRate { get; set; } = 1;
         public List<Particle> Particles { get; }
         public Vector2 Location { get; set; }
-        public int Lifetime { get; set; } = 1;
-        public int ParticleMaximumLife { get; set; } = 240;
+        public int Lifetime { get; set; } = 360;
+        public int ParticleMaximumLife { get; set; } = 480;
         public int StartDelay { get; set; } = 0;
         public double ParticleMaxSpeed { get; set; } = 2;
         public int Age { get; set; }
-        public bool Loop { get; set; } = false;
+        public bool Loop { get; set; } = true;
         public bool Active { get; set; } = false;
+        public bool Prewarm { get; set; } = true;
         public Color StartColor { get; set; } = new Color(255, 0, 0, 255);
         public Color EndColor { get; set; } = new Color(0, 0, 255, 0);
         public float StartScale { get; set; } = 3f;
@@ -35,8 +36,24 @@ namespace ParticleSystem
 
         public void Trigger()
         {
-            ResetToStart();
             Active = true;
+
+            if (Loop)
+            {
+                Particles.Clear();
+            }
+
+            if (Loop && Prewarm)
+            {
+                ResetToStart();
+
+                for (int i = 0; i < Lifetime; i++)
+                {
+                    Update();
+                }
+            }
+
+            ResetToStart();
         }
 
         public void Stop()
@@ -70,7 +87,11 @@ namespace ParticleSystem
 
         public void ResetToStart()
         {
-            Age = 0 - StartDelay;
+            if(!Prewarm)
+                Age = 0 - StartDelay;
+
+            else
+                Age = 0;
         }
 
         public void EmitParticles()
