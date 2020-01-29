@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using ParticleSystem.Providers;
 
 namespace ParticleSystem
 {
@@ -14,25 +15,33 @@ namespace ParticleSystem
         {
             Particles = new List<Particle>();
             _rnd = new Random();
+            ColorProvider = new GradientColorProvider();
+            ColorProvider.AddColorStop(Color.Blue, 0f);
+            /*ColorProvider.AddColorStop(Color.Green, 0.2f);
+            ColorProvider.AddColorStop(Color.Red, 0.4f);
+            ColorProvider.AddColorStop(Color.Blue, 0.6f);*/
+            ColorProvider.AddColorStop(Color.Yellow, 0.9f);
+            ColorProvider.AddColorStop(Color.Red, 1f);
         }
 
         // How many particles are emitted per frame update (1/60s)
-        public int EmissionRate { get; set; } = 1;
+        public int EmissionRate { get; set; } = 2;
         public List<Particle> Particles { get; }
         public Vector2 Location { get; set; }
-        public int Lifetime { get; set; } = 360;
-        public int ParticleMaximumLife { get; set; } = 480;
-        public int StartDelay { get; set; } = 0;
-        public double ParticleMaxSpeed { get; set; } = 2;
+        public int Lifetime { get; set; } = 180;
+        public int ParticleMaximumLife { get; set; } = 60;
+        public int StartDelay { get; set; } = 60;
+        public double ParticleMaxSpeed { get; set; } = 3;
         public int Age { get; set; }
         public bool Loop { get; set; } = true;
         public bool Active { get; set; } = false;
-        public bool Prewarm { get; set; } = true;
+        public bool Prewarm { get; set; } = false;
         public Color StartColor { get; set; } = new Color(255, 0, 0, 255);
         public Color EndColor { get; set; } = new Color(0, 0, 255, 0);
         public float StartScale { get; set; } = 3f;
-        public float EndScale { get; set; } = 1f;
+        public float EndScale { get; set; } = 0f;
         public Texture2D Texture { get; set; }
+        public IGradientColorProvider ColorProvider { get; set; }
 
         public void Trigger()
         {
@@ -135,7 +144,8 @@ namespace ParticleSystem
             particle.PreviousPosition = particle.Position;
             particle.Position += particle.Velocity;
             particle.Scale = LerpFloat(StartScale, EndScale, particlePercent);
-            particle.Color = Color.Lerp(StartColor, EndColor, particlePercent);
+            //particle.Color = Color.Lerp(StartColor, EndColor, particlePercent);
+            //particle.Color = ColorProvider.GetValue(particlePercent);
         }
 
         public void RenderParticle(Particle particle, SpriteBatch spriteBatch)
@@ -147,12 +157,14 @@ namespace ParticleSystem
 
         public Particle CreateNewParticle()
         {
+            var emitterPercent = (float)Age / Lifetime;
+
             Particle particle = new Particle();
             particle.Velocity = GetRandomVelocity();
             particle.Position = new Vector2(
                 Location.X - Texture.Width * StartScale * 0.5f,
                 Location.Y - Texture.Height * StartScale * 0.5f);
-
+            particle.Color = ColorProvider.GetValue(emitterPercent);
             return particle;
         }
 

@@ -1,7 +1,6 @@
-﻿
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
-namespace ParticleSystem
+namespace ParticleSystem.Helpers
 {
     public class KeyboardHelper
     {
