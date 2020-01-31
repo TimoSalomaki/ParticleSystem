@@ -39,5 +39,8 @@
   <ItemGroup>
     <Folder Include="Helpers\" />
     <Folder Include="Providers\" />
+    <Folder Include="Providers\Color\" />
+    <Folder Include="Providers\Numeric\" />
+    <Folder Include="Interpolators\" />
   </ItemGroup>
 </Project>

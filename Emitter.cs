@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using ParticleSystem.Providers;
+using ParticleSystem.Providers.Color;
+using ParticleSystem.Providers.Numeric;
 
 namespace ParticleSystem
 {
@@ -15,13 +16,21 @@ namespace ParticleSystem
         {
             Particles = new List<Particle>();
             _rnd = new Random();
-            ColorProvider = new GradientColorProvider();
-            ColorProvider.AddColorStop(Color.Blue, 0f);
-            /*ColorProvider.AddColorStop(Color.Green, 0.2f);
-            ColorProvider.AddColorStop(Color.Red, 0.4f);
-            ColorProvider.AddColorStop(Color.Blue, 0.6f);*/
-            ColorProvider.AddColorStop(Color.Yellow, 0.9f);
-            ColorProvider.AddColorStop(Color.Red, 1f);
+            ColorProvider = new GradientProvider();
+            ColorProvider.AddValuePoint(0f, Color.Blue);
+            ColorProvider.AddValuePoint(0.2f, Color.Green);
+            ColorProvider.AddValuePoint(0.4f, Color.Red);
+            ColorProvider.AddValuePoint(0.6f, Color.Blue);
+            ColorProvider.AddValuePoint(0.9f, Color.Yellow);
+            ColorProvider.AddValuePoint(1f, Color.Red);
+
+            ScaleProvider = new FloatProvider();
+            ScaleProvider.AddValuePoint(0f, 0f);
+            ScaleProvider.AddValuePoint(0.2f, 2f);
+            ScaleProvider.AddValuePoint(0.4f, 1f);
+            ScaleProvider.AddValuePoint(0.6f, 5f);
+            ScaleProvider.AddValuePoint(0.8f, 1f);
+            ScaleProvider.AddValuePoint(1f, 0f);
         }
 
         // How many particles are emitted per frame update (1/60s)
@@ -41,7 +50,8 @@ namespace ParticleSystem
         public float StartScale { get; set; } = 3f;
         public float EndScale { get; set; } = 0f;
         public Texture2D Texture { get; set; }
-        public IGradientColorProvider ColorProvider { get; set; }
+        public GradientProvider ColorProvider { get; set; }
+        public FloatProvider ScaleProvider { get; set; }
 
         public void Trigger()
         {
@@ -143,9 +153,8 @@ namespace ParticleSystem
             var particlePercent = (float)particle.Age / ParticleMaximumLife;
             particle.PreviousPosition = particle.Position;
             particle.Position += particle.Velocity;
-            particle.Scale = LerpFloat(StartScale, EndScale, particlePercent);
-            //particle.Color = Color.Lerp(StartColor, EndColor, particlePercent);
-            //particle.Color = ColorProvider.GetValue(particlePercent);
+            particle.Scale = ScaleProvider.GetValue(particlePercent);
+            particle.Color = ColorProvider.GetValue(particlePercent);
         }
 
         public void RenderParticle(Particle particle, SpriteBatch spriteBatch)
@@ -164,7 +173,7 @@ namespace ParticleSystem
             particle.Position = new Vector2(
                 Location.X - Texture.Width * StartScale * 0.5f,
                 Location.Y - Texture.Height * StartScale * 0.5f);
-            particle.Color = ColorProvider.GetValue(emitterPercent);
+            //particle.Color = ColorProvider.GetValue(emitterPercent);
             return particle;
         }
 
@@ -177,11 +186,6 @@ namespace ParticleSystem
             var y = r * Math.Sin(theta);
 
             return new Vector2((float)x, (float)y);
-        }
-
-        public float LerpFloat(float from, float to, float percentage)
-        {
-            return Math.Abs(to - ((to - from) * (1 - percentage)));
         }
     }
 }
