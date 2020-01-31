@@ -18,18 +18,14 @@ namespace ParticleSystem
             _rnd = new Random();
             ColorProvider = new GradientProvider();
             ColorProvider.AddValuePoint(0f, Color.Blue);
-            ColorProvider.AddValuePoint(0.2f, Color.Green);
-            ColorProvider.AddValuePoint(0.4f, Color.Red);
-            ColorProvider.AddValuePoint(0.6f, Color.Blue);
-            ColorProvider.AddValuePoint(0.9f, Color.Yellow);
+            ColorProvider.AddValuePoint(0.5f, Color.Orange);
             ColorProvider.AddValuePoint(1f, Color.Red);
 
             ScaleProvider = new FloatProvider();
             ScaleProvider.AddValuePoint(0f, 0f);
-            ScaleProvider.AddValuePoint(0.2f, 2f);
-            ScaleProvider.AddValuePoint(0.4f, 1f);
-            ScaleProvider.AddValuePoint(0.6f, 5f);
-            ScaleProvider.AddValuePoint(0.8f, 1f);
+            ScaleProvider.AddValuePoint(0.25f, 4f);
+            ScaleProvider.AddValuePoint(0.5f, 1f);
+            ScaleProvider.AddValuePoint(0.75f, 5f);
             ScaleProvider.AddValuePoint(1f, 0f);
         }
 
@@ -37,10 +33,10 @@ namespace ParticleSystem
         public int EmissionRate { get; set; } = 2;
         public List<Particle> Particles { get; }
         public Vector2 Location { get; set; }
-        public int Lifetime { get; set; } = 180;
-        public int ParticleMaximumLife { get; set; } = 60;
+        public int Lifetime { get; set; } = 80;
+        public int ParticleMaximumLife { get; set; } = 80;
         public int StartDelay { get; set; } = 60;
-        public double ParticleMaxSpeed { get; set; } = 3;
+        public double ParticleMaxSpeed { get; set; } = 2;
         public int Age { get; set; }
         public bool Loop { get; set; } = true;
         public bool Active { get; set; } = false;
@@ -160,7 +156,7 @@ namespace ParticleSystem
         public void RenderParticle(Particle particle, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, particle.Position, Texture.Bounds,
-                particle.Color, 0, Vector2.Zero, particle.Scale,
+                particle.Color, 0, new Vector2(Texture.Width/2, Texture.Height/2), particle.Scale,
                 SpriteEffects.None, 0);
         }
 
