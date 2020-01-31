@@ -52,7 +52,7 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 ## Progress
 
 ### Step 1 - Simple particle system ([V1-Initial](https://github.com/HankiDesign/ParticleSystem/tree/V1-Initial))
-![V1 Image](https://github.com/HankiDesign/ParticleSystem/blob/master/v1.png?raw=true)
+![V1 Image](https://github.com/HankiDesign/ParticleSystem/blob/master/Images/v1.png?raw=true)
 - 2D only
 - Particle age determines how long it lives (simulates and renders) as part of the emitter
 - Random direction (velocity) is given to the particle at birth
@@ -70,8 +70,12 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 - Color, scale and opacity interpolation from start to end of particle's life
 
 #### Step 1.3 ([V3](https://github.com/HankiDesign/ParticleSystem/tree/V3))
-![V3 Image](https://github.com/HankiDesign/ParticleSystem/blob/master/v3.png)
+![V3 Image](https://github.com/HankiDesign/ParticleSystem/blob/master/Images/v3.png)
 - Gradient color provider gives linearly interpolated gradient colors to the particle over its lifetime or emitters lifetime.
+
+### Step 2 - More dynamic system ([Dynamic_LinearInterpolation](https://github.com/HankiDesign/ParticleSystem/tree/Dynamic_LinearInterpolation))
+![Dynamic_LinearInterpolation Image](https://github.com/HankiDesign/ParticleSystem/blob/master/Images/LinearInterpolationProviders.gif)
+- Generic [`ValueProvider<T,U>`](https://github.com/HankiDesign/ParticleSystem/blob/Dynamic_LinearInterpolation/Providers/ValueProvider.cs) class can be used to provide colors, scales, opacities etc. linearly interpolated over the lifetime of the emitter or the particle. For example, each particle can go through a gradient of colors during their lifetime using the `ValueProvider`. They can also start with scale 0, then grow to 8 times the size of the texture by the halfpoint of their life and then shrink to the size of the texture (scale = 1) by the time their lifetime is 100% and they die. Whatever values can be interpolated, could be used with this mechanism.
 
 ## Using the particle system
 
