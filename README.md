@@ -35,11 +35,14 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 * [X] Color interpolation
 * [X] Scale interpolation
 * [X] Opacity interpolation
-* [ ] IColorProvider for providing colors over particle's or emitter's lifetime
-  * [ ] GradientColorProvider
-* [ ] IVelocityProvider for providing velocities over particle's or emitter's lifetime
-* [ ] IScaleProvider for providing velocities over particle's or emitter's lifetime
-* [ ] IOpacityProvider for providing velocities over particle's or emitter's lifetime
+* [X] Generic ValueProvider<T,U> for implementing easy linear interpolation of any values over the lifetime of the particle or emitter
+ * [X] FloatProvider
+ * [X] GradientProvider
+* [ ] ~~IColorProvider for providing colors over particle's or emitter's lifetime~~
+  * [ ] ~~GradientColorProvider~~
+* [ ] ~~IVelocityProvider for providing velocities over particle's or emitter's lifetime~~
+* [ ] ~~IScaleProvider for providing velocities over particle's or emitter's lifetime~~
+* [ ] ~~IOpacityProvider for providing velocities over particle's or emitter's lifetime~~
 
 ### Optimizations
 
