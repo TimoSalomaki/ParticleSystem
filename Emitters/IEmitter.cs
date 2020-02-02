@@ -11,6 +11,12 @@ namespace ParticleSystem.Emitters
         bool Active { get; set; }
         Texture2D Texture { get; set; }
         Vector2 Location { get; set; }
+        int Lifetime { get; set; }
+        int StartDelay { get; set; }
+        int ParticleMaximumLife { get; set; }
+        double ParticleMaxSpeed { get; set; }
+        int Age { get; set; }
+        bool Prewarm { get; set; } 
 
         void Render(SpriteBatch spriteBatch);
         void ResetToStart();
