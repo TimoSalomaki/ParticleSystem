@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ParticleSystem.Helpers;
+using ParticleSystem.Emitters;
+using ParticleSystem.Providers.Color;
+using ParticleSystem.Providers.Numeric;
 
 namespace ParticleSystem
 {
@@ -9,7 +12,7 @@ namespace ParticleSystem
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Emitter _emitter;
+        private IEmitter _emitter;
 
         public Game1()
         {
@@ -20,9 +23,34 @@ namespace ParticleSystem
 
         protected override void Initialize()
         {
-            _emitter = new Emitter();
-            _emitter.Location = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2,
-                _graphics.GraphicsDevice.Viewport.Height / 2);
+            var colorProvider = new GradientProvider();
+            colorProvider.AddValuePoint(0f, Color.Blue);
+            colorProvider.AddValuePoint(0.5f, Color.Orange);
+            colorProvider.AddValuePoint(1f, Color.Red);
+
+            var scaleProvider = new FloatProvider();
+            scaleProvider.AddValuePoint(0f, 0f);
+            scaleProvider.AddValuePoint(0.25f, 4f);
+            scaleProvider.AddValuePoint(0.5f, 1f);
+            scaleProvider.AddValuePoint(0.75f, 5f);
+            scaleProvider.AddValuePoint(1f, 0f);
+
+            var opacityProvider = new FloatProvider();
+            opacityProvider.AddValuePoint(0f, 0f);
+            opacityProvider.AddValuePoint(0.2f, 0.5f);
+            opacityProvider.AddValuePoint(0.5f, 1f);
+            opacityProvider.AddValuePoint(1f, 0f);
+
+            //_emitter = new PointEmitter2D(colorProvider, scaleProvider, opacityProvider);
+
+            //_emitter.Location = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2,
+            //    _graphics.GraphicsDevice.Viewport.Height / 2);
+
+            _emitter = new RectangleEmitter2D(_graphics.GraphicsDevice.Viewport.Width,
+                _graphics.GraphicsDevice.Viewport.Height, colorProvider, scaleProvider,
+                opacityProvider);
+
+            _emitter.Location = new Vector2(0, 0);
 
             base.Initialize();
         }

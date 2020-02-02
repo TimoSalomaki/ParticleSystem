@@ -6,27 +6,21 @@ using Microsoft.Xna.Framework;
 using ParticleSystem.Providers.Color;
 using ParticleSystem.Providers.Numeric;
 
-namespace ParticleSystem
+namespace ParticleSystem.Emitters
 {
-    public class Emitter
+    public abstract class Emitter2D : IEmitter
     {
-        private Random _rnd;
-        
-        public Emitter()
+        protected Random _rnd;
+
+        protected Emitter2D(GradientProvider colorProvider,
+            FloatProvider scaleProvider, FloatProvider opacityProvider)
         {
+            this.ColorProvider = colorProvider;
+            this.ScaleProvider = scaleProvider;
+            this.OpacityProvider = opacityProvider;
+
             Particles = new List<Particle>();
             _rnd = new Random();
-            ColorProvider = new GradientProvider();
-            ColorProvider.AddValuePoint(0f, Color.Blue);
-            ColorProvider.AddValuePoint(0.5f, Color.Orange);
-            ColorProvider.AddValuePoint(1f, Color.Red);
-
-            ScaleProvider = new FloatProvider();
-            ScaleProvider.AddValuePoint(0f, 0f);
-            ScaleProvider.AddValuePoint(0.25f, 4f);
-            ScaleProvider.AddValuePoint(0.5f, 1f);
-            ScaleProvider.AddValuePoint(0.75f, 5f);
-            ScaleProvider.AddValuePoint(1f, 0f);
         }
 
         // How many particles are emitted per frame update (1/60s)
@@ -41,13 +35,10 @@ namespace ParticleSystem
         public bool Loop { get; set; } = true;
         public bool Active { get; set; } = false;
         public bool Prewarm { get; set; } = false;
-        public Color StartColor { get; set; } = new Color(255, 0, 0, 255);
-        public Color EndColor { get; set; } = new Color(0, 0, 255, 0);
-        public float StartScale { get; set; } = 3f;
-        public float EndScale { get; set; } = 0f;
         public Texture2D Texture { get; set; }
         public GradientProvider ColorProvider { get; set; }
         public FloatProvider ScaleProvider { get; set; }
+        public FloatProvider OpacityProvider { get; set; }
 
         public void Trigger()
         {
@@ -76,9 +67,9 @@ namespace ParticleSystem
             Active = false;
         }
 
-        public void Update()
+        public virtual void Update()
         {
-            if(Age == Lifetime)
+            if (Age == Lifetime)
             {
                 if (!Loop)
                     Active = false;
@@ -102,7 +93,7 @@ namespace ParticleSystem
 
         public void ResetToStart()
         {
-            if(!Prewarm)
+            if (!Prewarm)
                 Age = 0 - StartDelay;
 
             else
@@ -117,7 +108,7 @@ namespace ParticleSystem
             }
         }
 
-        public void UpdateParticles()
+        public virtual void UpdateParticles()
         {
             foreach (var particle in Particles.ToList())
             {
@@ -135,7 +126,7 @@ namespace ParticleSystem
             }
         }
 
-        public void Render(SpriteBatch spriteBatch)
+        public virtual void Render(SpriteBatch spriteBatch)
         {
             foreach (var particle in Particles)
             {
@@ -143,7 +134,7 @@ namespace ParticleSystem
             }
         }
 
-        public void UpdateParticle(Particle particle)
+        public virtual void UpdateParticle(Particle particle)
         {
             particle.Age++;
             var particlePercent = (float)particle.Age / ParticleMaximumLife;
@@ -151,30 +142,36 @@ namespace ParticleSystem
             particle.Position += particle.Velocity;
             particle.Scale = ScaleProvider.GetValue(particlePercent);
             particle.Color = ColorProvider.GetValue(particlePercent);
+            particle.Opacity = OpacityProvider.GetValue(particlePercent);
         }
 
-        public void RenderParticle(Particle particle, SpriteBatch spriteBatch)
+        public virtual void RenderParticle(Particle particle, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, particle.Position, Texture.Bounds,
-                particle.Color, 0, new Vector2(Texture.Width/2, Texture.Height/2), particle.Scale,
+                particle.Color * particle.Opacity, 0, new Vector2(Texture.Width / 2, Texture.Height / 2), particle.Scale,
                 SpriteEffects.None, 0);
         }
 
-        public Particle CreateNewParticle()
+        public virtual Particle CreateNewParticle()
         {
             var emitterPercent = (float)Age / Lifetime;
 
             Particle particle = new Particle();
             particle.Velocity = GetRandomVelocity();
-            particle.Position = new Vector2(
-                Location.X - Texture.Width * StartScale * 0.5f,
-                Location.Y - Texture.Height * StartScale * 0.5f);
+            particle.Position = InitializePosition();
             //particle.Color = ColorProvider.GetValue(emitterPercent);
             return particle;
         }
 
-        public Vector2 GetRandomVelocity()
-        {            
+        public virtual Vector2 InitializePosition()
+        {
+            return new Vector2(
+                Location.X - Texture.Width * ScaleProvider.GetValue(0) * 0.5f,
+                Location.Y - Texture.Height * ScaleProvider.GetValue(0) * 0.5f);
+        }
+
+        private Vector2 GetRandomVelocity()
+        {
             var r = ParticleMaxSpeed * Math.Sqrt(_rnd.NextDouble());
             var theta = _rnd.NextDouble() * 2 * Math.PI;
 
