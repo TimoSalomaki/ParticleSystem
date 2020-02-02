@@ -38,7 +38,7 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 
 ![Rectangular Emitters](https://github.com/HankiDesign/ParticleSystem/blob/master/Images/RectangleEmitters.gif)
 
-- `[IEmitter](https://github.com/HankiDesign/ParticleSystem/blob/master/Emitters/IEmitter.cs)` interface and `[Emitter2D](https://github.com/HankiDesign/ParticleSystem/blob/master/Emitters/Emitter2D.cs)` abstract base class created so that emitters can more easily be created with different shapes and functionality.
+- [`IEmitter`](https://github.com/HankiDesign/ParticleSystem/blob/master/Emitters/IEmitter.cs) interface and [`Emitter2D`](https://github.com/HankiDesign/ParticleSystem/blob/master/Emitters/Emitter2D.cs) abstract base class created so that emitters can more easily be created with different shapes and functionality.
  - `PointEmitter2D` is the original emitter with just a location and each particle is emitter from that single point
  - `RectangleEmitter2D` is a rectangular emitter with a location (top left corner), and width and height so that particles are emitted randomly at any point within the emitter. See example animation of two rectangular emitters side by side above.
 
