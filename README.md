@@ -34,6 +34,14 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 ![Dynamic_LinearInterpolation Image](https://github.com/HankiDesign/ParticleSystem/blob/master/Images/LinearInterpolationProviders.gif)
 - Generic [`ValueProvider<T,U>`](https://github.com/HankiDesign/ParticleSystem/blob/Dynamic_LinearInterpolation/Providers/ValueProvider.cs) class can be used to provide colors, scales, opacities etc. linearly interpolated over the lifetime of the emitter or the particle. For example, each particle can go through a gradient of colors during their lifetime using the `ValueProvider`. They can also start with scale 0, then grow to 8 times the size of the texture by the halfpoint of their life and then shrink to the size of the texture (scale = 1) by the time their lifetime is 100% and they die. Whatever values can be interpolated, could be used with this mechanism.
 
+#### Step 2.1
+
+![Rectangular Emitters](https://github.com/HankiDesign/ParticleSystem/blob/master/Images/RectangleEmitters.gif)
+
+- `[IEmitter](https://github.com/HankiDesign/ParticleSystem/blob/master/Emitters/IEmitter.cs)` interface and `[Emitter2D](https://github.com/HankiDesign/ParticleSystem/blob/master/Emitters/Emitter2D.cs)` abstract base class created so that emitters can more easily be created with different shapes and functionality.
+ - `PointEmitter2D` is the original emitter with just a location and each particle is emitter from that single point
+ - `RectangleEmitter2D` is a rectangular emitter with a location (top left corner), and width and height so that particles are emitted randomly at any point within the emitter. See example animation of two rectangular emitters side by side above.
+
 ## Todo
 
 ### Particle attributes
