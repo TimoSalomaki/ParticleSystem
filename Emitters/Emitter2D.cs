@@ -144,7 +144,7 @@ namespace ParticleSystem.Emitters
             particle.PreviousPosition = particle.Position;
             particle.Position += particle.Velocity;
             //particle.Angle = Vector2Helper.GetAngleInRadians(particle.Velocity);
-            particle.Angle = Vector2Helper.GetAngleInDegrees(particle.PreviousPosition, particle.Position);
+            particle.Angle = Vector2Helper.GetAngleInDegrees(particle.Velocity);
             particle.Scale = ScaleProvider.GetValue(particlePercent);
             particle.Color = ColorProvider.GetValue(particlePercent);
             particle.Opacity = OpacityProvider.GetValue(particlePercent);
