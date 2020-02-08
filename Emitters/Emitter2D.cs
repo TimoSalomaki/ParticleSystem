@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using ParticleSystem.Providers.Color;
-using ParticleSystem.Providers.Numeric;
+using ParticleSystem.Helpers;
+using ParticleSystem.Providers;
+using ParticleSystem.Interpolators;
 
 namespace ParticleSystem.Emitters
 {
@@ -12,8 +13,10 @@ namespace ParticleSystem.Emitters
     {
         protected Random _rnd;
 
-        protected Emitter2D(GradientProvider colorProvider,
-            FloatProvider scaleProvider, FloatProvider opacityProvider)
+        protected Emitter2D(
+            ValueProvider<Color, ColorInterpolator> colorProvider,
+            ValueProvider<float, FloatInterpolator> scaleProvider,
+            ValueProvider<float, FloatInterpolator> opacityProvider)
         {
             this.ColorProvider = colorProvider;
             this.ScaleProvider = scaleProvider;
@@ -24,21 +27,21 @@ namespace ParticleSystem.Emitters
         }
 
         // How many particles are emitted per frame update (1/60s)
-        public int EmissionRate { get; set; } = 2;
+        public int EmissionRate { get; set; } = 1;
         public List<Particle> Particles { get; }
         public Vector2 Location { get; set; }
-        public int Lifetime { get; set; } = 80;
-        public int ParticleMaximumLife { get; set; } = 80;
-        public int StartDelay { get; set; } = 60;
+        public int Lifetime { get; set; } = 600;
+        public int ParticleMaximumLife { get; set; } = 180;
+        public int StartDelay { get; set; } = 0;
         public double ParticleMaxSpeed { get; set; } = 2;
         public int Age { get; set; }
-        public bool Loop { get; set; } = true;
+        public bool Loop { get; set; } = false;
         public bool Active { get; set; } = false;
         public bool Prewarm { get; set; } = false;
         public Texture2D Texture { get; set; }
-        public GradientProvider ColorProvider { get; set; }
-        public FloatProvider ScaleProvider { get; set; }
-        public FloatProvider OpacityProvider { get; set; }
+        public ValueProvider<Color, ColorInterpolator> ColorProvider { get; set; }
+        public ValueProvider<float, FloatInterpolator> ScaleProvider { get; set; }
+        public ValueProvider<float, FloatInterpolator> OpacityProvider { get; set; }
 
         public void Trigger()
         {
@@ -140,6 +143,8 @@ namespace ParticleSystem.Emitters
             var particlePercent = (float)particle.Age / ParticleMaximumLife;
             particle.PreviousPosition = particle.Position;
             particle.Position += particle.Velocity;
+            //particle.Angle = Vector2Helper.GetAngleInRadians(particle.Velocity);
+            particle.Angle = Vector2Helper.GetAngleInDegrees(particle.PreviousPosition, particle.Position);
             particle.Scale = ScaleProvider.GetValue(particlePercent);
             particle.Color = ColorProvider.GetValue(particlePercent);
             particle.Opacity = OpacityProvider.GetValue(particlePercent);
@@ -148,7 +153,7 @@ namespace ParticleSystem.Emitters
         public virtual void RenderParticle(Particle particle, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, particle.Position, Texture.Bounds,
-                particle.Color * particle.Opacity, 0, new Vector2(Texture.Width / 2, Texture.Height / 2), particle.Scale,
+                particle.Color * particle.Opacity, particle.Angle, new Vector2(Texture.Width / 2, Texture.Height / 2), particle.Scale,
                 SpriteEffects.None, 0);
         }
 

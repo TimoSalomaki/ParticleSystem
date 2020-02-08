@@ -1,14 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
-using ParticleSystem.Providers.Color;
-using ParticleSystem.Providers.Numeric;
+using ParticleSystem.Interpolators;
+using ParticleSystem.Providers;
 
 namespace ParticleSystem.Emitters
 {
     public class RectangleEmitter2D : Emitter2D
     {
         public RectangleEmitter2D(float width, float height,
-            GradientProvider colorProvider, FloatProvider scaleProvider,
-            FloatProvider opacityProvider)
+            ValueProvider<Color, ColorInterpolator> colorProvider,
+            ValueProvider<float, FloatInterpolator> scaleProvider,
+            ValueProvider<float, FloatInterpolator> opacityProvider)
             : base(colorProvider, scaleProvider, opacityProvider)
         {
             Width = width;

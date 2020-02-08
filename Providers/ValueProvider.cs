@@ -5,19 +5,52 @@ using ParticleSystem.Interpolators;
 
 namespace ParticleSystem.Providers
 {
-    public class ValueProvider<T, U> : IValueProvider<T, U> where U : IInterpolator<T>, new()
+    public class ValueProvider<T, U> : IValueProvider<T, U>
+        where U : IInterpolator<T>, new()
     {
         U _interpolator;
 
-        public ValueProvider()
+        public ValueProvider() : this(ProviderType.Dynamic) { }
+
+        public ValueProvider(ProviderType providerType)
+            : this(providerType, default(T)) { }
+
+        public ValueProvider(ProviderType providerType, T startValue)
+            : this(providerType, startValue, default(T)) { }
+
+        public ValueProvider(ProviderType providerType, T startValue, T endValue)
         {
             Values = new List<T>();
             Percentages = new List<float>();
+
+            if (startValue != null)
+            {
+                Values.Add(startValue);
+                Percentages.Add(0);
+            }
+
+            if (endValue != null)
+            {
+                Values.Add(endValue);
+                Percentages.Add(1);
+            }
+
+            ProviderType = providerType;
+            _interpolator = new U();
+        }
+
+        public ValueProvider(ProviderType providerType, IEnumerable<T> values,
+            IEnumerable<float> percentages)
+        {
+            Values = new List<T>(values);
+            Percentages = new List<float>(percentages);
+            ProviderType = providerType;
             _interpolator = new U();
         }
 
         public List<T> Values { get; set; }
         public List<float> Percentages { get; set; }
+        public ProviderType ProviderType { get; set; }
 
         public void AddValuePoint(float percentage, T value)
         {
@@ -63,12 +96,18 @@ namespace ParticleSystem.Providers
 
         public T GetValue(float percentage)
         {
-            var nearestValues = FindNearestValues(percentage);
+            if (ProviderType == ProviderType.Dynamic)
+            {
+                var nearestValues = FindNearestValues(percentage);
 
-            var relativePercentage = (percentage - nearestValues.fromPercentage) /
-                (nearestValues.toPercentage - nearestValues.fromPercentage);
+                var relativePercentage = (percentage - nearestValues.fromPercentage) /
+                    (nearestValues.toPercentage - nearestValues.fromPercentage);
 
-            return _interpolator.Interpolate(nearestValues.fromValue, nearestValues.toValue, relativePercentage);
+                return _interpolator.Interpolate(nearestValues.fromValue, nearestValues.toValue, relativePercentage);
+            }
+
+            // Static provider always returns the first value from the Values list without interpolation
+            return Values.First();
         }
 
         private (float fromPercentage, float toPercentage, T fromValue, T toValue) FindNearestValues(float percentage)
@@ -99,5 +138,11 @@ namespace ParticleSystem.Providers
 
             return (fromPercentage, toPercentage, from, to);
         }
+    }
+
+    public enum ProviderType
+    {
+        Static,
+        Dynamic
     }
 }
