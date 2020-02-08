@@ -45,6 +45,8 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 
 #### Step 2.2 Static ValueProvider and rotation([StaticValueProviderAndRotation](https://github.com/HankiDesign/ParticleSystem/tree/StaticValueProviderAndRotation))
 
+![Particle rotation](https://github.com/HankiDesign/ParticleSystem/blob/master/Images/ParticleRotation.gif)
+
 - `ValueProvider<T,U>` can now be marked static. In that case it always returns the first value without any interpolation.
 - Added multiple constructors for the `ValueProvider<T,U>` so that it can more easily be initialized to a static or dynamic one with initial values.
 - Rotation is now calculated for the particle based on the `Velocity`.
