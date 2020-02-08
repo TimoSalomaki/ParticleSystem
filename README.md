@@ -63,7 +63,7 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 * [X] Scale
 * [X] Opacity
 * [X] Color
-* [X] ROtation
+* [X] Rotation
 
 ### Emitter
 * [X] 2D
