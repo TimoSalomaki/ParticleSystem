@@ -43,6 +43,12 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
  - `PointEmitter2D` is the original emitter with just a location and each particle is emitter from that single point
  - `RectangleEmitter2D` is a rectangular emitter with a location (top left corner), and width and height so that particles are emitted randomly at any point within the emitter. See example animation of two rectangular emitters side by side above.
 
+#### Step 2.2 Static ValueProvider and rotation([StaticValueProviderAndRotation](https://github.com/HankiDesign/ParticleSystem/tree/StaticValueProviderAndRotation))
+
+- `ValueProvider<T,U>` can now be marked static. In that case it always returns the first value without any interpolation.
+- Added multiple constructors for the `ValueProvider<T,U>` so that it can more easily be initialized to a static or dynamic one with initial values.
+- Rotation is now calculated for the particle based on the `Velocity`.
+
 ## Todo
 
 ### Particle attributes
@@ -55,6 +61,7 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 * [X] Scale
 * [X] Opacity
 * [X] Color
+* [X] ROtation
 
 ### Emitter
 * [X] 2D
