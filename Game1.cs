@@ -17,8 +17,8 @@ namespace ParticleSystem
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            //_graphics.PreferredBackBufferWidth = 1920;
+            //_graphics.PreferredBackBufferHeight = 1080;
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -33,6 +33,7 @@ namespace ParticleSystem
 
             _emitter = new PointEmitter2D(colorProvider, scaleProvider, opacityProvider);
             _emitter.ParticleMaxSpeed = 3;
+            _emitter.Lifetime = 120;
 
             _emitter.Location = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2,
                 _graphics.GraphicsDevice.Viewport.Height / 2);
@@ -79,7 +80,8 @@ namespace ParticleSystem
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+            //_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+            _spriteBatch.Begin();
             _emitter.Render(_spriteBatch);
             _spriteBatch.End();
 
