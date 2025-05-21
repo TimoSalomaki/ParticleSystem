@@ -92,7 +92,7 @@ Throughout the process, I'll update the [todo](#todo) list and [progress](#progr
 
 ### Optimizations
 
-* [ ] Particle pool (object pool pattern)
+* [X] Particle pool (object pool pattern)
 * [ ] Particle as a struct instead of class, to avoid GC as the memory is allocated on stack instead of heap
 * [ ] Color optimisations
 * [ ] Particle struct memory alignment
