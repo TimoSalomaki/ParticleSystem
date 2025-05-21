@@ -6,17 +6,20 @@ using Microsoft.Xna.Framework;
 using ParticleSystem.Helpers;
 using ParticleSystem.Providers;
 using ParticleSystem.Interpolators;
+using ParticleSystem.Pools;
 
 namespace ParticleSystem.Emitters
 {
     public abstract class Emitter2D : IEmitter
     {
         protected Random _rnd;
+        protected ParticlePool _particlePool;
 
         protected Emitter2D(
             ValueProvider<Color, ColorInterpolator> colorProvider,
             ValueProvider<float, FloatInterpolator> scaleProvider,
-            ValueProvider<float, FloatInterpolator> opacityProvider)
+            ValueProvider<float, FloatInterpolator> opacityProvider,
+            int particlePoolInitialCapacity = 100)
         {
             this.ColorProvider = colorProvider;
             this.ScaleProvider = scaleProvider;
@@ -24,6 +27,7 @@ namespace ParticleSystem.Emitters
 
             Particles = new List<Particle>();
             _rnd = new Random();
+            _particlePool = new ParticlePool(particlePoolInitialCapacity);
         }
 
         // How many particles are emitted per frame update (1/60s)
@@ -49,6 +53,11 @@ namespace ParticleSystem.Emitters
 
             if (Loop)
             {
+                // Return all existing particles to the pool
+                foreach (var particle in Particles)
+                {
+                    _particlePool.ReleaseParticle(particle);
+                }
                 Particles.Clear();
             }
 
@@ -120,11 +129,11 @@ namespace ParticleSystem.Emitters
                 {
                     UpdateParticle(particle);
                 }
-
-                // The particle is dead, remove it
+                // The particle is dead, return it to the pool
                 else
                 {
                     Particles.Remove(particle);
+                    _particlePool.ReleaseParticle(particle);
                 }
             }
         }
@@ -161,7 +170,8 @@ namespace ParticleSystem.Emitters
         {
             var emitterPercent = (float)Age / Lifetime;
 
-            Particle particle = new Particle();
+            // Get a particle from the pool instead of creating a new one
+            Particle particle = _particlePool.GetParticle();
             particle.Velocity = GetRandomVelocity();
             particle.Position = InitializePosition();
             //particle.Color = ColorProvider.GetValue(emitterPercent);

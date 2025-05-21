@@ -47,5 +47,6 @@
     <Folder Include="Providers\Numeric\" />
     <Folder Include="Interpolators\" />
     <Folder Include="Emitters\" />
+    <Folder Include="Pools\" />
   </ItemGroup>
 </Project>
